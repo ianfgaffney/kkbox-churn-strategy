@@ -73,7 +73,7 @@ Download the data through Kaggle and follow its applicable access and data-use t
 | `members_v3.csv` | Member attributes and registration information |
 | `transactions_v2.csv` | Separate source-comparison diagnostics only; excluded from model inputs |
 
-The prediction cutoff is **February 28, 2017**. The campaign cohort consists of labeled subscribers whose unambiguous latest transaction state has a membership expiry in **March 2017**. The exact correspondence between the supplied label period and this operational prediction setup remains a documentation check; the transaction-file descriptions alone do not establish label alignment.
+Features are constructed using transaction records dated on or before February 28, 2017. Outcomes use the supplied March-period labels in train_v2.csv. The campaign analysis is restricted to subscribers whose unambiguous latest pre-cutoff subscription state expires in March. Competition labels are used as supplied rather than independently reconstructed against each selected expiry date.
 
 Kaggle describes `transactions.csv` as covering transactions through February 28 and the refreshed `transactions_v2.csv` as covering transactions through March 31. Features use the original file and enforce the February cutoff.
 
