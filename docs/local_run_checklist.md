@@ -1,44 +1,56 @@
-# Local execution checklist
+# Local execution
 
-1. Extract the project into a separate folder. Leave the original notebook and raw data intact.
-2. Edit config.json: set raw_data_dir to your existing folder, e.g.
-   /Users/iangaffney/Desktop/Internship!/KKbox/Data/Raw
-   (Forward slashes in JSON need no escaping.) This is the only machine-specific edit.
-3. Select the working Python environment in VS Code. Do not reinstall existing packages
-   unnecessarily. requirements.txt records known versions and proposed compatibility ranges,
-   not a tested exact lock. The prior Python 3.9 environment is retained for reproduction,
-   not recommended as a long-term supported environment. Homebrew libomp is a Mac prerequisite
-   if LightGBM cannot import. No additional shap package is needed.
-4. From the extracted project root run:
-   python scripts/check_notebooks.py
-   python -m unittest discover -s tests -v
-5. Run notebooks 01, 02, 03, 04 in order, each from a fresh kernel. Either use VS Code's
-   Restart Kernel and Run All for each, or install nbformat/nbclient and run
-   python scripts/run_all.py using a registered python3 kernel for this environment.
-   Data/config changes require rebuilding downstream notebooks; stale checkpoints are not valid.
-6. Compare EDA: 970960 labels, 941518 campaign subscribers, 10944 ambiguous subscribers,
-   2527 no-history subscribers, 199 identical latest-state rows removed. Feature matrix
-   should be (941518, 21). Investigate count differences before interpreting model scores.
-7. Check full-data results against reports/source_snapshot/source_results.md. Tiny differences
-   from dependency versions, threading, or deterministic tie ordering are possible. Material
-   differences require investigation; do not copy old output over new results.
-8. Run python scripts/audit_v2_overlap.py; inspect reports/tables/v2_overlap_audit.json.
-   Send that JSON and any failures back for review. Do not automatically append late-released
-   historical records without a data-availability rationale.
-9. Run python scripts/capture_environment.py from the notebook's actual interpreter;
-   inspect the lockfile before committing. Check artifacts/metadata.json versions.
-10. Read docs/review.md and close or disclose each limitation. Currency, source rules, label
-    timing, and definition of available-at-cutoff remain required documentation work.
-11. Before GitHub: keep Data/ and artifacts/ ignored; clear notebook outputs containing
-    subscriber IDs, paths, or raw rows. Aggregate CSVs and charts may be published only in
-    accordance with Kaggle terms. No GitHub repository was created by this review.
+## Setup
 
-## Files generated on your Mac
-- Data/processed/subscriber_base.csv.gz, campaign_eda_checkpoint.csv.gz, modeling_table.csv.gz
-- artifacts/logistic_pipeline.joblib, lightgbm_bundle.joblib, lightgbm.txt, metadata.json
-- artifacts/split_membership.csv.gz and validation/test_predictions.csv.gz
-- reports/tables/*.csv and reports/figures/*.png
+Use the repository root as the working directory. Put `train_v2.csv`, `transactions.csv`, and `members_v3.csv` in `Data/Raw/`, or change `raw_data_dir` in `config.json`. The optional audits additionally require `transactions_v2.csv`.
 
-Only load joblib model bundles that you created or trust. CSV checkpoints preserve dates,
-flags and row IDs through the supplied loader. The original exploration checkpoint lacked
-later history features; use notebook 02's modeling_table for modeling.
+Install `requirements.txt` in a virtual environment and register its kernel:
+
+```bash
+python -m ipykernel install --user --name kkbox --display-name "Python (KKBox)"
+python scripts/check_notebooks.py
+python -m unittest discover -s tests -v
+```
+
+On macOS, a missing `libomp.dylib` error from LightGBM requires the OpenMP runtime, available through `brew install libomp`.
+
+## Execute
+
+Select the registered kernel in VS Code. Restart and run each notebook in order, or execute:
+
+```bash
+python scripts/run_all.py --kernel kkbox
+```
+
+Each notebook uses a fresh kernel and saved intermediate tables. Changes to input data or configuration require rebuilding downstream outputs.
+
+Expected baseline counts: 970,960 labels; 941,518 campaign subscribers; 10,944 ambiguous latest states; 2,527 missing histories; 199 identical latest-state rows removed; 21 model features. Compare generated metrics with the committed aggregate tables. Investigate material differences rather than copying old results into new outputs.
+
+## Optional release diagnostics
+
+These are independent of the four-notebook pipeline:
+
+```bash
+python scripts/audit_v2_overlap.py
+python scripts/compare_v2_same_day.py
+```
+
+The second script consumes the first script's saved unmatched rows. Candidate pairings do not prove transaction identity. Both scripts leave the modeling inputs unchanged.
+
+## Record the environment
+
+Run this using the same interpreter as the notebook kernel:
+
+```bash
+python scripts/capture_environment.py
+```
+
+The generated `requirements-local-lock.txt` is ignored by default because a local environment can contain unrelated packages or private installation paths. Review it before adding a portable, project-specific environment record. Do not substitute versions from a different machine. Current dependency ranges are not an exact lockfile.
+
+## Outputs and Git
+
+- `Data/processed/`: subscriber base, campaign checkpoint, and modeling table.
+- `artifacts/`: model bundles, metadata, split membership, predictions, and selected subscriber lists.
+- `reports/tables/` and `reports/figures/`: aggregate results suitable for review.
+
+Keep subscriber-level data, models, and local backups out of Git. Preserve safe aggregate notebook outputs for readers; clear individual records and personal paths before committing. Load only model bundles you created or trust.

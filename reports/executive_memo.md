@@ -68,7 +68,7 @@ Retention operations should review delivery weekly. Analytics should evaluate co
 
 ### Risks and interpretation
 
-This is a historical method demonstration, not evidence of current KKBox performance. Evaluation is within-period rather than a future-month test; test results have been inspected during development. Historical availability of member attributes is not fully verified. The later transaction release is excluded because availability of its historical-dated records at the cutoff is unclear. Exact alignment of the supplied label period with the operational prediction setup remains to be documented.
+This is a historical method demonstration, not evidence of current KKBox performance. Evaluation is within-period rather than a future-month test; test results have been inspected during development. Historical availability of member attributes is not fully verified. The later transaction release is excluded because availability of its historical-dated records at the cutoff is unclear. Supplied competition labels were not independently reconstructed against each subscriber's selected expiry date.
 
 **The model predicts churn, not responsiveness to outreach.** Intervention effectiveness must be established experimentally.
 

@@ -1,72 +1,37 @@
-# Review of the uploaded 01_eda_baseline.ipynb
+# Methodology and limitations
 
-## Scope and evidence
-Reviewed all 60 cells: 54 code cells and 6 Markdown cells (see validation report for computed counts).
-The notebook has saved executed outputs and no saved error outputs. This is evidence of
-prior execution, not proof of a fresh-kernel run. No raw CSVs or fitted model objects were
-attached. Reported full-data metrics come from source outputs, not a rerun here.
+## Prediction setup
 
-## What was already sound
-- Explicit 21-feature allowlist excludes IDs, labels, and churn-weighted revenue.
-- Logistic preprocessing fit only on training; category definitions learned from training.
-- Stratified disjoint user splits and early stopping using validation, not test.
-- Transactions used in latest-state/history features restricted to the fixed cutoff.
-- Same-day distinct records classified as ambiguous rather than arbitrarily ordered.
-- Save-rate assumptions and modeled net revenue distinguished from observed outcomes.
+Transaction features use `transactions.csv` through February 28, 2017. The target is the supplied March-period label in `train_v2.csv`. Campaign eligibility requires a latest unambiguous pre-cutoff state with a March expiry. Supplied labels were not independently reconstructed against each selected expiry date; the campaign cohort is a subset of the supplied label population.
 
-## Reproducibility repairs in the reviewed project
-- Four notebooks have explicit disk handoffs and complete imports. Independent kernels.
-- One config replaces the personal absolute path; outputs stay inside project directory.
-- One streaming pass consolidates latest-state selection, counts, cancellation history,
-  first observation, and recent counts. History counts still include original duplicates.
-- Raw-record counting is now explicitly cutoff-filtered, not dependent on source max date.
-- Row IDs and subscriber IDs survive checkpoints. Prediction tables include both, target,
-  value, and probability; strategy uses saved records rather than positional cross-notebook joins.
-- Model bundle, native LightGBM file, category definitions, split membership, environment
-  metadata, score tables, metrics, gains curve, calibration and scenario charts are exported.
-- Original outputs are cleared from refactored notebooks; aggregate historical plot evidence
-  is separately labeled. No personal path, credentials, or original subscriber examples are packaged.
-- Requirements distinguish reported pandas/numpy versions from unverified dependency ranges.
+The [competition host's explanation](https://www.kaggle.com/competitions/kkbox-churn-prediction-challenge/discussion/43622) defines churn by failure to renew within 30 days after expiry. [Databricks' implementation](https://www.databricks.com/notebooks/churn/1-data-preparation.html) discusses the label periods and the more complicated expiry-window rules. These references support the broad setup, not a subscriber-by-subscriber verification of labels.
 
-## Unresolved methodological issues (not silently fixed)
-1. **Label/cohort alignment:** train_v2 supplied labels must be checked against official
-   eligibility and renewal-gap labeling logic. The chosen March-expiry intersection is a
-   subset of supplied labels, not necessarily the entire deployable subscriber universe.
-   Keep results provisional until the rationale is documented; don't recompute labels ad hoc.
-2. **Snapshot availability:** a pre-cutoff transaction date does not prove every attached
-   expiry/account field was recorded then. members_v3 has later registrations. Only tenure
-   is masked for future registrations; original demographic fields remain to preserve the
-   historical baseline. A prospective claim requires historical snapshots. Add an ablation
-   without member features on training/validation if needed, but do not tune on exposed test.
-3. **v2 coverage:** only three original-history-missing IDs were recovered in earlier checks.
-   That does not establish equivalence for existing subscribers. Run audit_v2_overlap.py
-   to measure exact pre-cutoff row overlap and affected labeled users. Later-published old
-   records cannot automatically be assumed available at the scoring date.
-4. **Latest-state ambiguity/exclusions:** 10,944 ties remain unresolved; the 941,518-person
-   campaign cohort excludes them, older expirations and missing history. Report coverage.
-   Expiry dates such as 1970 and recency exceeding plan length were observed; some were
-   excluded by cohort selection, others retained and flagged. No universal correction is justified.
-5. **Evaluation:** EDA used full cohort labels before splitting; subscribers were randomly
-   split within one period. Test model metrics were inspected before policy development was
-   finished, although policy selection used validation. The test should not be described as a
-   pristine prospective policy trial. Future-month validation remains outstanding.
-6. **Valuation:** actual_amount_paid / plan_days * 30 is a standardized historical billing
-   proxy. It is not MRR, margin, cash lost, or guaranteed next-cycle revenue. Zero payments
-   get zero weight; zero-day plans have unknown normalized value. Stale plans and promotions
-   may misstate future value. Verify original NTD denomination from official metadata before
-   replacing the current 'dataset units' labels; never interpret contact cost 5 as USD.
-7. **Interventions:** uniform 10% relative reduction in otherwise-occurring churn is assumed.
-   Costs 1/5/10 are illustrative, no incentive or service cost is included. Aggregate probability
-   agreement does not validate effect size, individual calibration, or segment economics.
-   Positive-only selection improves modeled net mechanically under these assumptions.
-8. **Experiment:** normal-approximation sample sizes concern churn, not economic superiority;
-   no non-delivery inflation is applied. ITT effect is across everyone assigned outreach.
-   A real revenue outcome needs a prespecified common horizon and recognition convention.
-9. **Operations:** current score is a single February 28 snapshot. Seven-day-before-expiry
-   scoring, weekly refreshes, payment-failure detection and recovery are proposals, not tested features.
+## Transaction release choice
 
-## Recommended publication gate
-Complete fresh-kernel local execution, version capture, source audit, documentation of
-label/currency definitions, and review of proxy/eligibility sensitivities before presenting
-results as final. Exposed test data must not guide further tuning. A true new holdout requires
-new chronological data, not another random split of already explored records.
+Kaggle describes the original file as covering transactions through February 28 and the refreshed v2 file through March 31. The overlap audit found 361,187 pre-cutoff v2 rows without exact original-file matches, including 170,132 rows for labeled subscribers. They affect 89,099 subscribers in the campaign cohort.
+
+Among unmatched labeled v2 rows, 163,881 have subscriber/date combinations absent from the original; 6,251 have same-day original records. The latter produce 38,172 candidate pairings, all with differing expiry dates. These are not proven one-to-one transaction matches. Neither old transaction dates nor field differences establish when values became available. The baseline therefore excludes v2 features rather than automatically combining releases.
+
+Run the optional audit and same-day comparison separately from the modeling pipeline. They do not modify model inputs.
+
+## Missingness and eligibility
+
+The original label population contains 970,960 subscribers. There are 10,944 ambiguous latest states and 2,527 subscribers without original-file history. The March-expiry campaign cohort contains 941,518 subscribers. Exact latest-date duplicates are collapsed for state selection; history features count original records, including duplicates.
+
+Invalid ages are masked. Post-cutoff registrations are masked when deriving tenure, but this does not establish historical availability of the other member fields. Missing or ambiguous states, stale plans, zero payments, and zero-duration plans require explicit coverage reporting rather than automatic interpretation as errors.
+
+## Evaluation
+
+The model uses a 21-feature allowlist that excludes subscriber IDs, labels, and outcome-weighted revenue. Logistic preprocessing and LightGBM category definitions are fitted on training data. Early stopping uses validation data. Predictions are saved with subscriber and row identifiers before strategy evaluation.
+
+Subscribers are split within one period. Full-cohort EDA preceded splitting, and model test results were inspected before policy development was complete. No future-month performance or prospective campaign effectiveness is claimed. SHAP explains model output in log-odds, not causal effects.
+
+## Value and intervention assumptions
+
+All money is in NTD. Actual payment divided by plan days and multiplied by 30 is a standardized historical payment proxy, not recognized revenue, MRR, margin, or guaranteed future revenue. Known zero payments retain zero value; nonpositive plan duration yields unknown normalized value.
+
+Uniform effectiveness and contact cost underpin the scenario rule. Agreement between predicted and observed churn-associated value does not validate an intervention effect. A randomized pilot must measure incremental retention, payment revenue, costs, and guardrails. A churn-powered sample-size calculation does not establish power for economic outcomes.
+
+## Operations
+
+The historical analysis scores once at February 28. The proposed seven-days-before-expiry workflow requires features reconstructed and evaluated at those later scoring dates. Verified payment-failure events and consent/contactability records would be required for operational deployment; the current files do not supply them.
