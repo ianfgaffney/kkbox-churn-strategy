@@ -1,0 +1,10 @@
+{
+  "pre_cutoff_v2_rows": 361187,
+  "distinct_pre_cutoff_v2_rows": 361187,
+  "exact_distinct_matches_in_original": 0,
+  "distinct_rows_absent_from_original": 361187,
+  "distinct_labeled_rows_absent_from_original": 170132,
+  "labeled_subscribers_with_absent_rows": 92686,
+  "subscribers_with_new_rows_at_or_after_selected_latest_or_no_selected_state": 86607,
+  "campaign_subscribers_with_absent_v2_history_rows": 89099
+}

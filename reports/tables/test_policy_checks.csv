@@ -1,0 +1,3 @@
+policy,predicted_value_at_risk,observed_churn_associated_value,prediction_error_relative_to_observed,share_of_churn_value_captured,share_of_churners_captured
+Fill capacity,1418177.585723603,1430657.2740710643,-0.008723045395735762,0.681525124635495,0.6657778962804959
+Positive benefit only,1168808.913009846,1161347.5240710643,0.006424768455721042,0.5532334895522577,0.553992800959872

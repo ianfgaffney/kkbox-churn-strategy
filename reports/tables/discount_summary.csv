@@ -1,0 +1,8 @@
+discount_band,subscribers,churners,churn_rate
+No discount,938335,73816,0.07866700059147319
+100%: zero payment,1952,730,0.3739754098360656
+Unknown: zero list price,538,446,0.828996282527881
+25–50%,445,6,0.01348314606741573
+10–25%,244,11,0.045081967213114756
+Payment above list,3,3,1.0
+Up to 10%,1,0,0.0

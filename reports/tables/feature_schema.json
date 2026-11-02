@@ -1,0 +1,27 @@
+{
+  "numeric": [
+    "latest_payment_plan_days",
+    "latest_plan_list_price",
+    "latest_actual_amount_paid",
+    "days_to_expiry",
+    "days_since_latest_transaction",
+    "history_transaction_count",
+    "history_cancel_count",
+    "history_days_since_first_transaction",
+    "transaction_count_30d",
+    "tenure_days",
+    "age_clean",
+    "discount_depth"
+  ],
+  "categorical": [
+    "latest_payment_method_id",
+    "latest_is_auto_renew",
+    "latest_is_cancel",
+    "city",
+    "registered_via",
+    "gender_clean",
+    "member_record_missing",
+    "age_missing_or_invalid",
+    "recency_exceeds_plan"
+  ]
+}

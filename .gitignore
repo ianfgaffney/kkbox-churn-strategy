@@ -1,0 +1,12 @@
+Data/
+data/
+artifacts/
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+*.pyc
+requirements-local-lock.txt
+
+# Original project backup
+original_backup/

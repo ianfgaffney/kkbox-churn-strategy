@@ -1,0 +1,13 @@
+{
+  "raw_transaction_rows": 21547746,
+  "earliest_transaction": "2015-01-01 00:00:00",
+  "latest_transaction": "2017-02-28 00:00:00",
+  "invalid_transaction_dates": 0,
+  "latest_candidate_rows": 981847,
+  "latest_identical_rows_removed": 199,
+  "ambiguous_subscribers": 10944,
+  "labeled_subscribers": 970960,
+  "campaign_subscribers": 941518,
+  "missing_history": 2527,
+  "post_cutoff_registration": 1057
+}
