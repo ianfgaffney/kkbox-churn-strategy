@@ -1,30 +1,24 @@
-# Validation performed during review
+# Validation record
 
-- All 45 code cells parse successfully; all four notebooks pass nbformat schema validation.
-- Three unit tests pass: cutoff/tie/duplicate chunk invariance; date/boolean/feature checkpoint roundtrip and leakage allowlist; outcome-independent policy selection and missing-value handling.
-- Notebooks 01 and 02 executed on constructed raw CSV fixtures, including cross-chunk duplicates, same-day conflicting records, future transactions, absent members, and post-cutoff registration dates.
-- Notebook 03 executed with real logistic-regression and LightGBM fitting on 30,000 synthetic subscribers. Models, split identities, category definitions and prediction artifacts were saved.
-- Notebook 04 executed in a fresh namespace from those saved synthetic-model predictions, including targeting, scenarios, sample sizing, and plot/table exports.
-- The v2 audit passed a constructed exact-overlap/duplicate/future-date fixture.
-- Synthetic runs used fresh Python namespaces for each notebook, not a full Jupyter kernel orchestration test. No synthetic metrics are presented as KKBox results.
-- Full KKBox data execution and source audit were NOT performed; data was not attached. Runtime and original Mac versions differ. Historical figures in README come from supplied notebook outputs.
-- LightGBM 4.7 emitted a deprecation warning for eval_set. That API remains functional and preserves compatibility with the earlier 4.x installation; it was not a training error.
+## Full-data results
 
-## Review runtime
+The author reported successfully executing all four notebooks locally. Committed aggregate tables record LightGBM test log loss 0.155379, ROC AUC 0.906778, and 67.54% top-decile capture. The positive-benefit policy selects 12,644 contacts with modeled net value NTD 53,660.89 under the 10% effectiveness and NTD 5 contact-cost assumptions.
 
-Python 3.12.14.
+The repository review reconciled these headline figures with the CSV exports. It did not independently rerun the complete raw KKBox dataset. Notebooks 02–04 currently omit saved execution outputs; aggregate results remain available in reports/tables/ and reports/figures/.
 
-```json
-{
-  "pandas": "2.2.3",
-  "numpy": "2.3.5",
-  "scikit-learn": "1.8.0",
-  "lightgbm": "4.7.0",
-  "matplotlib": "3.10.8",
-  "joblib": "1.5.3",
-  "nbformat": "5.11.1",
-  "nbclient": "0.11.0"
-}
-```
+## Automated checks
 
-These are review-runtime versions, not the original Mac environment or an exact recommended lockfile.
+- Three unit tests cover cutoff filtering, cross-chunk duplicates and same-day ambiguity; checkpoint roundtrips and feature exclusions; and outcome-independent selection with unknown and zero value.
+- Notebook code cells pass syntax checks. Notebook files also pass schema validation.
+- Cleanup validation checks relative documentation links and confirms the main notebooks no longer require the optional v2 audit output or a personal absolute path.
+- The automated runner supports an explicit registered kernel name.
+
+These checks do not establish full-data numerical reproducibility, prospective model accuracy, or causal campaign effectiveness.
+
+## Earlier fixture checks
+
+During development, notebooks 01–02 were exercised on constructed raw-data fixtures, and model/strategy code was exercised with synthetic data. Those checks tested pipeline behavior; synthetic metrics are not presented as KKBox results.
+
+## Reproduction limits
+
+The reported local environment used Python 3.9.6, pandas 2.3.3, and NumPy 2.0.2. Other successful local package versions have not yet been published as an exact dependency record. Capture them from that environment using scripts/capture_environment.py. Model outputs can vary with dependency versions, threading, and tie ordering.

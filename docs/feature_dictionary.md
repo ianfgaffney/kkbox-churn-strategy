@@ -1,6 +1,6 @@
 # Feature dictionary
 
-All monetary fields remain in original dataset units. Latest means latest transaction date before or on cutoff, with all distinct same-day ties excluded from campaign eligibility.
+All monetary fields are in New Taiwan dollars (NTD). Latest means latest transaction date before or on cutoff, with all distinct same-day ties excluded from campaign eligibility.
 
 | Feature | Definition |
 |---|---|

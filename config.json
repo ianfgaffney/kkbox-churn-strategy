@@ -1,10 +1,10 @@
 {
-  "raw_data_dir": "/Users/iangaffney/Desktop/Internship!/KKbox/Data/Raw",
+  "raw_data_dir": "Data/Raw",
   "cutoff": "2017-02-28",
   "expiry_start": "2017-03-01",
   "expiry_end": "2017-03-31",
   "chunk_size": 500000,
   "seed": 42,
-  "currency": "dataset units; verify NTD against official data dictionary before publication",
-  "status": "historical baseline; timing/source assumptions pending"
+  "currency": "NTD",
+  "status": "historical case study; supplied labels and member snapshot limitations documented"
 }

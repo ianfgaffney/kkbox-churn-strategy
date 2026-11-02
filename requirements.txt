@@ -1,5 +1,5 @@
-# pandas/numpy versions reported in the original session; other ranges are proposed,
-# not a recovered lockfile. Capture the actual successful local environment after rerun.
+# Python 3.9 baseline. Ranges are compatibility bounds, not an exact environment lock.
+# See docs/local_run_checklist.md for recording the environment used for a run.
 pandas==2.3.3
 numpy==2.0.2
 scikit-learn>=1.2,<1.7

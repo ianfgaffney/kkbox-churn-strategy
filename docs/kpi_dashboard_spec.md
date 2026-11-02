@@ -25,7 +25,7 @@ Filters: expiry cohort, scoring date, model version, policy version, experiment 
 
 - Prediction cutoff: February 28, 2017.
 - Features: original `transactions.csv` through the cutoff, plus member attributes from `members_v3.csv`. `transactions_v2.csv` is used for diagnostics only.
-- Target labels: `train_v2.csv`. Exact correspondence between the supplied label period and the operational expiry-cohort definition remains to be documented.
+- Target labels: `train_v2.csv`. These are the supplied March-period labels; they were not independently reconstructed against each subscriber’s selected expiry date.
 - Campaign population: 941,518 subscribers with an unambiguous latest subscription state expiring in March 2017.
 - Strategy test population: 188,304 subscribers. The 18,831-contact cap and 12,644-person positive-benefit list apply to this test population, not the full customer base.
 - Historical member-attribute availability is not fully verified. Preserve this limitation in reporting.
