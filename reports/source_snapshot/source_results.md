@@ -15,7 +15,7 @@ LightGBM best iteration: 1131. Validation log loss 0.1546, AUC 0.9066.
 | Positive benefit only | 12644 | 63220 | 116880.89 | 53660.89 |
 
 Assumptions: relative churn reduction 10%, cost/contact 5, no incentive/service cost,
-30-day-equivalent payment proxy. Figures are in dataset units pending metadata verification.
+30-day-equivalent payment proxy. Monetary figures are in New Taiwan dollars (NTD), as documented in the dataset metadata. This archive preserves earlier run metrics; current results are in reports/tables/ and the model and strategy notebooks.
 
 Value-ranked full-capacity test observed churn-associated value 1430657.27, predicted
 1418177.59 (-0.87%). Positive-only observed 1161347.52, predicted 1168808.91 (+0.64%).

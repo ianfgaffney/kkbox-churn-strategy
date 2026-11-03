@@ -99,7 +99,7 @@ The author's successful local run used Python 3.9.6, pandas 2.3.3, and NumPy 2.0
 | `docs/` | Methodology, feature definitions, validation, and operations |
 | `scripts/` and `tests/` | Execution, optional diagnostics, and focused tests |
 
-Intermediate tables and subscriber predictions are saved locally in ignored directories. Notebooks 02–04 currently omit saved outputs; their aggregate results are available in `reports/tables/` and `reports/figures/`.
+Intermediate tables and subscriber predictions are saved locally in ignored directories. Notebooks 03–04 include saved model evaluation and strategy outputs. Notebook 02 omits saved outputs. Aggregate results are also available in `reports/tables/` and `reports/figures/`.
 
 ## Limitations
 

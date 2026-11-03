@@ -4,7 +4,7 @@
 
 The author reported successfully executing all four notebooks locally. Committed aggregate tables record LightGBM test log loss 0.155379, ROC AUC 0.906778, and 67.54% top-decile capture. The positive-benefit policy selects 12,644 contacts with modeled net value NTD 53,660.89 under the 10% effectiveness and NTD 5 contact-cost assumptions.
 
-The repository review reconciled these headline figures with the CSV exports. It did not independently rerun the complete raw KKBox dataset. Notebooks 02–04 currently omit saved execution outputs; aggregate results remain available in reports/tables/ and reports/figures/.
+The repository review reconciled these headline figures with the CSV exports. It did not independently rerun the complete raw KKBox dataset. The committed model and strategy notebooks now include saved execution outputs: all 13 model code cells and all 10 strategy code cells have execution counts, with no saved error outputs. Their displayed test metrics and policy results agree with the aggregate CSV exports at the reported precision. Notebook 02 still omits saved outputs. Aggregate results remain available in reports/tables/ and reports/figures/.
 
 ## Automated checks
 
